@@ -150,9 +150,10 @@ namespace Journey_to_Babel_2
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
             KeyboardState kb = Keyboard.GetState();
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || kb.IsKeyDown(Keys.Escape) && !oldKb.IsKeyDown(Keys.Escape)) 
+                this.Exit();
+            
 
             
 
@@ -175,10 +176,7 @@ namespace Journey_to_Babel_2
                 currentLanguage = GermanLang;
                 lang = Language.German;
             }
-            //if (currentGameState == gameState.done && kb.IsKeyDown(Keys.Space) && !oldKb.IsKeyDown(Keys.Space))
-            //{
-            //    currentGameState = 0;
-            //}
+
             if (kb.IsKeyDown(Keys.Space) && !oldKb.IsKeyDown(Keys.Space))
             {
                 currentGameState++;   
@@ -186,24 +184,17 @@ namespace Journey_to_Babel_2
 
             if (kb.IsKeyDown(Keys.Enter) && !oldKb.IsKeyDown(Keys.Enter))
             {
-                switch (currentGameState)
+
+
+                if (currentGameState == gameState.done)
                 {
-                    case gameState.start:
-
-                        currentGameState = gameState.save;
-                        break;
-
-
-                    case gameState.save:
-                        currentGameState = gameState.done;
-                        break;
-
-                    case gameState.done:
-
-                        currentGameState = gameState.start;
-                        break;
-
+                    currentGameState = gameState.start;
                 }
+                else
+                {
+                    currentGameState++;
+                }
+                
 
             }
 
@@ -222,7 +213,7 @@ namespace Journey_to_Babel_2
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-            switch (lang) 
+            switch (lang)
             {
                 case Language.English:
 
@@ -232,10 +223,10 @@ namespace Journey_to_Babel_2
                             spriteBatch.DrawString(font, currentLanguage[statePhrases[0]], new Vector2(50, 10), Color.Black);
                             break;
                         case gameState.save:
-                            spriteBatch.DrawString(font, currentLanguage[statePhrases[0]], new Vector2(50, 10), Color.Black);
+                            spriteBatch.DrawString(font, currentLanguage[statePhrases[1]], new Vector2(50, 10), Color.Black);
                             break;
                         case gameState.done:
-                            spriteBatch.DrawString(font, currentLanguage[statePhrases[0]], new Vector2(50, 10), Color.Black);
+                            spriteBatch.DrawString(font, currentLanguage[statePhrases[2]], new Vector2(50, 10), Color.Black);
                             break;
                     }
                     break;
@@ -246,13 +237,13 @@ namespace Journey_to_Babel_2
                     switch (currentGameState)
                     {
                         case gameState.start:
-                            spriteBatch.DrawString(font, currentLanguage[statePhrases[1]], new Vector2(50, 10), Color.Black);
+                            spriteBatch.DrawString(font, currentLanguage[statePhrases[0]], new Vector2(50, 10), Color.Black);
                             break;
                         case gameState.save:
                             spriteBatch.DrawString(font, currentLanguage[statePhrases[1]], new Vector2(50, 10), Color.Black);
                             break;
                         case gameState.done:
-                            spriteBatch.DrawString(font, currentLanguage[statePhrases[1]], new Vector2(50, 10), Color.Black);
+                            spriteBatch.DrawString(font, currentLanguage[statePhrases[2]], new Vector2(50, 10), Color.Black);
                             break;
                     }
 
@@ -264,22 +255,22 @@ namespace Journey_to_Babel_2
                     switch (currentGameState)
                     {
                         case gameState.start:
-                            spriteBatch.DrawString(font, currentLanguage[statePhrases[2]], new Vector2(50, 10), Color.Black);
+                            spriteBatch.DrawString(font, currentLanguage[statePhrases[0]], new Vector2(50, 10), Color.Black);
                             break;
                         case gameState.save:
-                            spriteBatch.DrawString(font, currentLanguage[statePhrases[2]], new Vector2(50, 10), Color.Black);
+                            spriteBatch.DrawString(font, currentLanguage[statePhrases[1]], new Vector2(50, 10), Color.Black);
                             break;
                         case gameState.done:
                             spriteBatch.DrawString(font, currentLanguage[statePhrases[2]], new Vector2(50, 10), Color.Black);
                             break;
                     }
                     break;
+            }
 
 
-        }
 
-            
-
+            spriteBatch.DrawString(font, "Press (1,2,3) to change language", new Vector2(50, 100), Color.White);
+            spriteBatch.DrawString(font, "Press Enter to change game state", new Vector2(50, 200), Color.White);
 
 
             spriteBatch.End();
