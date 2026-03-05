@@ -20,7 +20,10 @@ namespace FileWriteExample
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        SpriteFont font;
+        SpriteFont font; 
+
+        
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -37,7 +40,7 @@ namespace FileWriteExample
         {
             // TODO: Add your initialization logic here
 
-
+            
             Simple example1 = new Simple();
             Complex example2 = new Complex();
 
@@ -53,8 +56,27 @@ namespace FileWriteExample
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = this.Content.Load<SpriteFont>("SpriteFont1");
+            
             // TODO: use this.Content to load your game content here
         }
+
+
+        public void ReadFiles(string fileName)
+        {
+
+            if (File.Exists(fileName))
+            {
+                string[] lines = File.ReadAllLines(fileName);
+
+                for(int i = 0; i <lines.Length; i++)
+                {
+                    spriteBatch.DrawString(font, lines[i], new Vector2(0, 50 * i), Color.White);
+                }
+
+            }
+        }
+
+
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
@@ -76,7 +98,7 @@ namespace FileWriteExample
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            
+
 
             // TODO: Add your update logic here
 
@@ -90,9 +112,15 @@ namespace FileWriteExample
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            example1;
-            // TODO: Add your drawing code here
 
+            // TODO: Add your drawing code here
+            spriteBatch.Begin();
+
+
+            ReadFiles(@"C:\Users\249912\Desktop\TestFile.dat");
+
+
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }

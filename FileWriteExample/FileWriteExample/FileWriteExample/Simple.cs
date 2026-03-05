@@ -18,7 +18,7 @@ namespace FileWriteExample
             // append data to the end of the file or creat the file if it does
             // not exist.
             // StreamWriter opens a file for output from the program.
-            StreamWriter myFileOut = new StreamWriter("TestFile.dat", false);
+            StreamWriter myFileOut = new StreamWriter(@"C:\Users\249912\Desktop\TestFile.dat", false);
 
             // Write data to a file.
             // .Write() command sends data to the file without the newline command.
@@ -34,7 +34,7 @@ namespace FileWriteExample
             myFileOut.Close();
 
             // Opens a file for input to the program.
-            StreamReader myFileIn = new StreamReader("TestFile.Dat");
+            StreamReader myFileIn = new StreamReader(@"C:\Users\249912\Desktop\TestFile.dat");
 
             Console.WriteLine("Read by lines");
             Console.WriteLine();
@@ -52,7 +52,7 @@ namespace FileWriteExample
             Console.WriteLine(); // Put black line to screen
 
             // Opens a file for input to the program.
-            StreamReader myFile = new StreamReader("TestFile.Dat");
+            StreamReader myFile = new StreamReader(@"C:\Users\249912\Desktop\TestFile.dat");
 
             Console.WriteLine("Read by Chars");
             Console.WriteLine();
@@ -66,7 +66,7 @@ namespace FileWriteExample
 
             myFile.Close();
             Console.WriteLine("Please press enter to see the Complex Example.");
-            //Console.ReadLine(); Turned off in XNA
+           // Console.ReadLine(); Turned off in XNA
         }
     }
 }
