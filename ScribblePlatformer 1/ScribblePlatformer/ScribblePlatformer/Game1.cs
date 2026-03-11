@@ -7,10 +7,9 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
-namespace Write_and_Read_files
+namespace ScribblePlatformer
 {
     /// <summary>
     /// This is the main type for your game
@@ -20,15 +19,27 @@ namespace Write_and_Read_files
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        SpriteFont font;
+        KeyboardState oldKb;
 
-        List<string> lines;
-        int inputX, inputY;
+        private Level level;
+
+
+        private const int TargetFrameRate = 60;
+        private const int backBufferWidth = 1280;
+        private const int BackBufferHeight = 720;
+
+        
+
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferWidth = backBufferWidth;
+            graphics.PreferredBackBufferHeight = BackBufferHeight;
             Content.RootDirectory = "Content";
+            IsMouseVisible = true;
+            TargetElapsedTime = TimeSpan.FromTicks(TimeSpan.TicksPerSecond / TargetFrameRate);
+
         }
 
         /// <summary>
@@ -40,8 +51,7 @@ namespace Write_and_Read_files
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            lines = new List<string>();
-            StreamReader myFileIn = new StreamReader("TestFile.dat");
+
             base.Initialize();
         }
 
@@ -53,56 +63,12 @@ namespace Write_and_Read_files
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            font = this.Content.Load<SpriteFont>("SpriteFont1");
-
-
-            ReadFileAsStrings(@"Content/anything.txt");
-
-            ReadFileAsIntegers(@"Content/numbers.txt");
-
+            LoadLevel();
             // TODO: use this.Content to load your game content here
         }
-
-        private void ReadFileAsStrings(string path)
+        private void LoadLevel()
         {
-            try
-            {
-                using (StreamReader reader = new StreamReader(path))
-                {
-                    while (!reader.EndOfStream)
-                    {
-                        string line = reader.ReadLine();
-                        lines.Add(line);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("The file could not be read:");
-                Console.WriteLine(e.Message);
-            }
-        }
-
-        private void ReadFileAsIntegers(string path)
-        {
-            try
-            {
-                using (StreamReader reader = new StreamReader(path))
-                {
-                    while (!reader.EndOfStream)
-                    {
-                        string line = reader.ReadLine();
-                        string[] parts = line.Split(' ');
-                        inputX = Convert.ToInt32(parts[0]);
-                        inputY = Convert.ToInt32(parts[1]);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("The file could not be read:");
-                Console.WriteLine(e.Message);
-            }
+            level = new Level(Services, @"Content/Levels/Level01.txt");
         }
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
@@ -121,13 +87,16 @@ namespace Write_and_Read_files
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
 
+            KeyboardState kb = Keyboard.GetState();
+
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || kb.IsKeyDown(Keys.Escape) && !oldKb.IsKeyDown(Keys.Escape))
+                this.Exit();
 
             // TODO: Add your update logic here
 
             base.Update(gameTime);
+            oldKb = kb;
         }
 
         /// <summary>
@@ -139,33 +108,12 @@ namespace Write_and_Read_files
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
 
-            //DrawText();
-            DrawNumbers();
+            level.Draw(gameTime, spriteBatch);
+
             spriteBatch.End();
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
         }
-
-
-        private void DrawText()
-        {
-            Vector2 position = new Vector2(50, 10);
-            foreach (string s in lines)
-            {
-                spriteBatch.DrawString(font, s, position, Color.Black);
-                position.Y += 30;
-            }
-        }
-
-        private void DrawNumbers()
-        {
-            Vector2 position = new Vector2(50, 10);
-            int sum = inputX + inputY;
-            string answer = "I read " + inputX + " and " + inputY + ". The sum is " + sum;
-
-            spriteBatch.DrawString(font, answer, position, Color.Black);
-        }
-
     }
 }

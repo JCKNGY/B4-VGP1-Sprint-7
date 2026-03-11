@@ -43,7 +43,8 @@ namespace Journey_to_Babel_2
         Dictionary<string, string> GermanLang = new Dictionary<string, string>();
 
         Dictionary<string, string> currentLanguage;
-        Language lang = Language.English; 
+        Language lang = Language.English;
+
 
         KeyboardState oldKb;
 

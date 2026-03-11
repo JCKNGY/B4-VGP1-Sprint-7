@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -9,8 +5,11 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace FileWriteExample
+namespace ScribblePlatformer
 {
     /// <summary>
     /// This is the main type for your game
@@ -20,14 +19,27 @@ namespace FileWriteExample
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        SpriteFont font; 
+        KeyboardState oldKb;
+
+        private Level level;
+
+
+        private const int TargetFrameRate = 60;
+        private const int backBufferWidth = 1280;
+        private const int BackBufferHeight = 720;
 
         
+
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferWidth = backBufferWidth;
+            graphics.PreferredBackBufferHeight = BackBufferHeight;
             Content.RootDirectory = "Content";
+            IsMouseVisible = true;
+            TargetElapsedTime = TimeSpan.FromTicks(TimeSpan.TicksPerSecond / TargetFrameRate);
+
         }
 
         /// <summary>
@@ -40,10 +52,6 @@ namespace FileWriteExample
         {
             // TODO: Add your initialization logic here
 
-            
-            Simple example1 = new Simple();
-            Complex example2 = new Complex();
-
             base.Initialize();
         }
 
@@ -55,29 +63,13 @@ namespace FileWriteExample
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            font = this.Content.Load<SpriteFont>("SpriteFont1");
-            
+            LoadLevel();
             // TODO: use this.Content to load your game content here
         }
-
-
-        public void ReadFiles(string fileName)
+        private void LoadLevel()
         {
-
-            if (File.Exists(fileName))
-            {
-                string[] lines = File.ReadAllLines(fileName);
-
-                for(int i = 0; i < lines.Length; i++)
-                {
-                    spriteBatch.DrawString(font, lines[i], new Vector2(0, 50 * i), Color.White);
-                }
-
-            }
+            level = new Level(Services, @"Content/Levels/Level01.txt");
         }
-
-
-
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
         /// all content.
@@ -95,14 +87,16 @@ namespace FileWriteExample
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+
+            KeyboardState kb = Keyboard.GetState();
+
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || kb.IsKeyDown(Keys.Escape) && !oldKb.IsKeyDown(Keys.Escape))
                 this.Exit();
-
-
 
             // TODO: Add your update logic here
 
             base.Update(gameTime);
+            oldKb = kb;
         }
 
         /// <summary>
@@ -112,15 +106,13 @@ namespace FileWriteExample
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
             spriteBatch.Begin();
 
-
-            ReadFiles(@"C:\Users\249912\Desktop\TestFile.dat");
-
+            level.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();
+            // TODO: Add your drawing code here
+
             base.Draw(gameTime);
         }
     }

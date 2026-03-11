@@ -1,19 +1,19 @@
 ﻿<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectGuid>{3B1D75E9-8E14-433A-86FF-48B6B7EDA337}</ProjectGuid>
+    <ProjectGuid>{C77047C5-FBB4-4B93-ABA7-BEF4119A6E21}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Write_and_Read_files</RootNamespace>
-    <AssemblyName>Write_and_Read_files</AssemblyName>
+    <RootNamespace>Dungeon_Crawl_2</RootNamespace>
+    <AssemblyName>Dungeon_Crawl_2</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
     <XnaProfile>Reach</XnaProfile>
-    <XnaCrossPlatformGroupID>5f95a470-f8b6-4923-b936-8bf522f7f8d2</XnaCrossPlatformGroupID>
+    <XnaCrossPlatformGroupID>db59bc12-ed44-4713-854f-411b7b75604c</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
     <ApplicationIcon>Game.ico</ApplicationIcon>
     <Thumbnail>GameThumbnail.png</Thumbnail>
@@ -67,8 +67,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Write_and_Read_filesContent\Write_and_Read_filesContent.contentproj">
-      <Name>Write_and_Read_filesContent</Name>
+    <ProjectReference Include="..\Dungeon_Crawl_2Content\Dungeon_Crawl_2Content.contentproj">
+      <Name>Dungeon_Crawl_2Content</Name>
       <XnaReferenceType>Content</XnaReferenceType>
     </ProjectReference>
   </ItemGroup>

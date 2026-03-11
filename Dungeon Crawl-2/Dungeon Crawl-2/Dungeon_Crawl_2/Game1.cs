@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -9,8 +5,11 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace FileWriteExample
+namespace Dungeon_Crawl_2
 {
     /// <summary>
     /// This is the main type for your game
@@ -19,10 +18,6 @@ namespace FileWriteExample
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-
-        SpriteFont font; 
-
-        
 
         public Game1()
         {
@@ -40,10 +35,6 @@ namespace FileWriteExample
         {
             // TODO: Add your initialization logic here
 
-            
-            Simple example1 = new Simple();
-            Complex example2 = new Complex();
-
             base.Initialize();
         }
 
@@ -55,28 +46,9 @@ namespace FileWriteExample
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            font = this.Content.Load<SpriteFont>("SpriteFont1");
-            
+
             // TODO: use this.Content to load your game content here
         }
-
-
-        public void ReadFiles(string fileName)
-        {
-
-            if (File.Exists(fileName))
-            {
-                string[] lines = File.ReadAllLines(fileName);
-
-                for(int i = 0; i < lines.Length; i++)
-                {
-                    spriteBatch.DrawString(font, lines[i], new Vector2(0, 50 * i), Color.White);
-                }
-
-            }
-        }
-
-
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
@@ -98,8 +70,6 @@ namespace FileWriteExample
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-
-
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -114,13 +84,7 @@ namespace FileWriteExample
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            spriteBatch.Begin();
 
-
-            ReadFiles(@"C:\Users\249912\Desktop\TestFile.dat");
-
-
-            spriteBatch.End();
             base.Draw(gameTime);
         }
     }

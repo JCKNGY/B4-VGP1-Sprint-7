@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Write_and_Read_files")]
-[assembly: AssemblyProduct("Write_and_Read_files")]
+[assembly: AssemblyTitle("Dungeon_Crawl_2")]
+[assembly: AssemblyProduct("Dungeon_Crawl_2")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyCopyright("Copyright ©  2026")]
@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 // On Windows, the following GUID is for the ID of the typelib if this
 // project is exposed to COM. On other platforms, it unique identifies the
 // title storage container when deploying this assembly to the device.
-[assembly: Guid("3b1d75e9-8e14-433a-86ff-48b6b7eda337")]
+[assembly: Guid("c77047c5-fbb4-4b93-aba7-bef4119a6e21")]
 
 // Version information for an assembly consists of the following four values:
 //
