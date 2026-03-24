@@ -13,7 +13,20 @@ namespace ScribblePlatformer
     {
         private Tile[,] tiles;
         private Dictionary<string, Texture2D> tileSheets;
+        public List<Rectangle> TileDefinitions;
         private Dictionary<int, Rectangle> TileSourceRecs;
+
+        public Player Player
+        {
+            get
+            {
+                return Player; 
+            }
+        }
+        Player player;
+
+        private Vector2 start;
+
 
         public ContentManager Content 
         {
@@ -118,7 +131,7 @@ namespace ScribblePlatformer
             switch (_tileType) 
             {
                 case '.':
-                    return new Tile(String.Empty, 0);
+                    return new Tile(String.Empty, 0,TileCollision.Passable);
 
 
                 case 'B':
@@ -143,7 +156,8 @@ namespace ScribblePlatformer
                 case 'y':
                     return LoadVarietyTile("Platforms", 20, 5);
 
-
+                case '+':
+                    return LoadStartTile(_x, _y);
 
 
 
@@ -152,6 +166,20 @@ namespace ScribblePlatformer
             }
 
         }
+
+
+        private Tile LoadStartTile(int _x, int _y)
+        {
+            if (Player != null)
+                throw new NotSupportedException("A level may only have one starting point.");
+
+            start = new Vector2((_x * 64) + 48, (_y * 64) + 16);
+            player = new Player(this, start);
+
+            return new Tile(String.Empty, 0, TileCollision.Passable);
+        }
+
+
 
         private Tile LoadVarietyTile(string _tileSheetName, int _colorRow, int _variationCount)
         {
@@ -191,6 +219,33 @@ namespace ScribblePlatformer
         public void Dispose()
         {
             Content.Unload();
+        }
+
+
+        public void Update(GameTime _gameTime)
+        {
+            Player.Update(_gameTime);
+        }
+
+
+        public TileCollision GetCollision(int _x, int _y)
+        {
+            if (_x < 0 || _x >= Width)
+                return TileCollision.Impassable;
+            if (_y < 0 || _y >= Height)
+                return TileCollision.Passable;
+
+            return tiles[_x,_y].Collision;
+        }
+
+
+        public Rectangle GetBounds(int _x, int _y)
+        {
+            if (_x < 0 || _y < 0 || _x >= Width || _y >= Height)
+                return new Rectangle(_x * Tile.Width, _y * Tile.Height, Tile.Width, Tile.Height);
+
+            if (tiles[_x, _y].Collision == TileCollision.Platform)
+                return new Rectangle(_x * Tile.Width, (_y * Tile.Height) + 20, Tile.Width, Tile.Height - 20);
         }
     }
 }
