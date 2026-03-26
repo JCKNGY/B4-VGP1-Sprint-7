@@ -185,7 +185,7 @@ namespace ScribblePlatformer
         {
             int index = random.Next(_variationCount);
             int tileSheetIndex = _colorRow + index;
-            return new Tile(_tileSheetName, tileSheetIndex);
+            return new Tile(_tileSheetName, tileSheetIndex, TileCollision.Passable);
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -246,6 +246,9 @@ namespace ScribblePlatformer
 
             if (tiles[_x, _y].Collision == TileCollision.Platform)
                 return new Rectangle(_x * Tile.Width, (_y * Tile.Height) + 20, Tile.Width, Tile.Height - 20);
+
+
+            return new Rectangle(_x * Tile.Width, (_y * Tile.Height) + 5, Tile.Width, Tile.Height - 5);
         }
     }
 }

@@ -288,12 +288,12 @@ namespace ScribblePlatformer
                             if(absDepthY < absDepthX || collision == TileCollision.Platform)
                             {
                                 if (previousBottom <= tileBounds.Top)
-                                    IsOnGround = true;
+                                    isOnGround = true;
 
 
                                 if(collision == TileCollision.Impassable || IsOnGround)
                                 {
-                                    Position = new Vector2D(Position.X, Position.Y + depth.Y);
+                                    Position = new Vector2(Position.X, Position.Y + depth.Y);
                                     bounds = BoundingRectangle;
 
                                 }
