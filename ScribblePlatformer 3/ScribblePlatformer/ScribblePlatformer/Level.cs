@@ -222,9 +222,9 @@ namespace ScribblePlatformer
         }
 
 
-        public void Update(GameTime gameTime)
+        public void Update(GameTime _gameTime)
         {
-            Player.Update(gameTime);
+            Player.Update(_gameTime);
         }
 
 

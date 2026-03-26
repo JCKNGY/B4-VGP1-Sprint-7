@@ -47,8 +47,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Sprites\Player\player.png">
-      <Name>player</Name>
+    <None Include="Sprites\Player\player-2.png">
+      <Name>player-2</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

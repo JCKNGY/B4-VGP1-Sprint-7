@@ -130,7 +130,7 @@ namespace ScribblePlatformer
 
         public void LoadContent()
         {
-            playerSprite = Level.Content.Load<Texture2D>("Sprites/Player/player");
+            playerSprite = Level.Content.Load<Texture2D>("Sprites/Player/player-2");
 
             int width = playerSprite.Width - 4;
             int left = (playerSprite.Width- width) - 2;
