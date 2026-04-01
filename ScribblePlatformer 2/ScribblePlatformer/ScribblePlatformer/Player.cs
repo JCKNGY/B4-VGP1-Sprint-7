@@ -63,15 +63,14 @@ namespace ScribblePlatformer
         Vector2 velocity;
 
         private const float MoveAcceleration = 14000.0f;
-        private const float MaxMoveSpeed = 2000f;
+        private const float MaxMoveSpeed = 2000.0f;
         private const float GroundDragFactor = 0.58f;
         private const float AirDragFactor = 0.65f;
 
-
-        private const float MaxJumpTime = .35f;
-        private const float JumpLaunchVelocity = -4000f;
-        private const float GravityAcceleartion = 3500f;
-        private const float MaxFallSpeed = 600f;
+        private const float MaxJumpTime = 0.35f;
+        private const float JumpLaunchVelocity = -4000.0f;
+        private const float GravityAcceleration = 3500.0f;
+        private const float MaxFallSpeed = 600.0f;
         private const float JumpControlPower = 0.14f;
 
 
@@ -195,47 +194,36 @@ namespace ScribblePlatformer
 
         public void ApplyPhysics(GameTime _gameTime)
         {
-            float elapsed = (float)_gameTime.ElapsedGameTime.TotalSeconds;
+    float elapsed = (float)_gameTime.ElapsedGameTime.TotalSeconds;
+    Vector2 previousPosition = Position;
 
-            Vector2 previousPosition = Position;
+    // Apply acceleration and gravity
+    velocity.X += movement * MoveAcceleration * elapsed;
+    velocity.Y = MathHelper.Clamp(velocity.Y + GravityAcceleration * elapsed, -MaxFallSpeed, MaxFallSpeed);
 
-            velocity.X += movement * MoveAcceleration * elapsed;
-            velocity.Y = MathHelper.Clamp(velocity.Y + GravityAcceleartion * elapsed, -MaxFallSpeed, MaxFallSpeed);
+    // Handle Jumping
+    velocity.Y = DoJump(velocity.Y, _gameTime);
 
-            velocity.Y = DoJump(velocity.Y, _gameTime);
+    // Apply drag
+    if (IsOnGround)
+        velocity.X *= GroundDragFactor;
+    else
+        velocity.X *= AirDragFactor;
 
+    // Clamp horizontal speed
+    velocity.X = MathHelper.Clamp(velocity.X, -MaxMoveSpeed, MaxMoveSpeed);
 
-            if (IsOnGround)
-                velocity.X *= GroundDragFactor;
-            else
-                velocity.X *= AirDragFactor;
+    // Apply velocity to position
+    Position += velocity * elapsed;
+    Position = new Vector2((float)Math.Round(Position.X), (float)Math.Round(Position.Y));
 
-            velocity.X = MathHelper.Clamp(velocity.X, -MaxMoveSpeed, MaxMoveSpeed);
+    // Separates player from tiles
+    HandleCollisions();
 
-
-            Position += velocity * elapsed;
-            Position = new Vector2((float)Math.Round(Position.X), (float)Math.Round(Position.Y));
-
-
-
-            HandleCollisions();
-
-
-            if(Position.X == previousPosition.X)
-            {
-                velocity.X = 0;
-            }
-
-
-            if (Position.Y == previousPosition.Y)
-                velocity.Y = 0;
-
-
-            
-
-
-
-        }
+    // Reset velocity if we hit a wall/floor
+    if (Position.X == previousPosition.X) velocity.X = 0;
+    if (Position.Y == previousPosition.Y) velocity.Y = 0;
+}
         private float DoJump(float _velocityY, GameTime _gameTime)
         {
             if (isJumping)
@@ -266,63 +254,55 @@ namespace ScribblePlatformer
         }
 
         private void HandleCollisions()
+{
+    Rectangle bounds = BoundingRectangle;
+    int leftTile = (int)Math.Floor((float)bounds.Left / Tile.Width);
+    int rightTile = (int)Math.Ceiling(((float)bounds.Right / Tile.Width)) - 1;
+    int topTile = (int)Math.Floor((float)bounds.Top / Tile.Height);
+    int bottomTile = (int)Math.Ceiling(((float)bounds.Bottom / Tile.Height)) - 1;
+
+    isOnGround = false;
+
+    for (int y = topTile; y <= bottomTile; ++y)
+    {
+        for (int x = leftTile; x <= rightTile; ++x)
         {
-            Rectangle bounds = BoundingRectangle;
-            int leftTile = (int)Math.Floor((float)bounds.Left / Tile.Width);
-            int rightTile = (int)Math.Ceiling(((float)bounds.Right / Tile.Width))-1;
-
-            int topTile = (int)Math.Floor((float)bounds.Top / Tile.Height);
-            int bottomTile = (int)Math.Ceiling(((float)bounds.Bottom / Tile.Height))-1;
-
-            isOnGround = false;
-
-
-
-
-
-            for (int y = topTile; y <= bottomTile; ++y)
+            TileCollision collision = Level.GetCollision(x, y);
+            if (collision != TileCollision.Passable)
             {
-                for(int x = leftTile; x<= rightTile; ++x)
+                Rectangle tileBounds = Level.GetBounds(x, y);
+                Vector2 depth = bounds.GetIntersectionDepth(tileBounds);
+                if (depth != Vector2.Zero)
                 {
-                    TileCollision collision = Level.GetCollision(x, y);
-                    if(collision != TileCollision.Passable)
+                    float absDepthX = Math.Abs(depth.X);
+                    float absDepthY = Math.Abs(depth.Y);
+
+                    // Resolve along the shallow axis
+                    if (absDepthY < absDepthX || collision == TileCollision.Platform)
                     {
-                        Rectangle tileBounds = Level.GetBounds(x, y);
-                        Vector2 depth = bounds.GetIntersectionDepth(tileBounds);
-                        if(depth != Vector2.Zero)
+                        // Check if we are landing on top of the tile
+                        if (previousBottom <= tileBounds.Top)
+                            isOnGround = true;
+
+                        // Resolve collision along Y axis (ignore platforms unless landing on them)
+                        if (collision == TileCollision.Impassable || IsOnGround)
                         {
-                            float absDepthX = Math.Abs(depth.X);
-                            float absDepthY = Math.Abs(depth.Y);
-
-                            if(absDepthY < absDepthX || collision == TileCollision.Platform)
-                            {
-                                if (previousBottom <= tileBounds.Top)
-                                    isOnGround = true;
-
-
-                                if(collision == TileCollision.Impassable || IsOnGround)
-                                {
-                                    Position = new Vector2(Position.X, Position.Y + depth.Y);
-                                    bounds = BoundingRectangle;
-
-                                }
-
-                            }
-                            else if(collision == TileCollision.Impassable)
-                            {
-                                Position = new Vector2(Position.X + depth.X, Position.Y);
-                                bounds = BoundingRectangle;
-                            }
+                            Position = new Vector2(Position.X, Position.Y + depth.Y);
+                            bounds = BoundingRectangle; // Update bounds for next tile check
                         }
+                    }
+                    else if (collision == TileCollision.Impassable)
+                    {
+                        // Resolve collision along X axis
+                        Position = new Vector2(Position.X + depth.X, Position.Y);
+                        bounds = BoundingRectangle;
                     }
                 }
             }
-            previousBottom = bounds.Bottom;
-
-
-
-
         }
+    }
+    previousBottom = bounds.Bottom;
+}
         public void Draw(GameTime _gameTime, SpriteBatch _spriteBatch)
         {
             Rectangle source = new Rectangle(0, 0, playerSprite.Width, playerSprite.Height);
